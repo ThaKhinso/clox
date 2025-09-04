@@ -18,6 +18,14 @@ int main(int argc, char* argv[]) {
 	writeChunk(&chunk, OP_RETURN, 125);
 	writeChunk(&chunk, OP_RETURN, 125);
 	writeChunk(&chunk, OP_RETURN, 125);
+
+	writeChunk(&chunk, OP_RETURN, 126);
+	writeChunk(&chunk, OP_RETURN, 126);
+	writeChunk(&chunk, OP_RETURN, 126);
+	writeChunk(&chunk, OP_RETURN, 126);
+	writeChunk(&chunk, OP_RETURN, 126);
+	writeChunk(&chunk, OP_RETURN, 126);
+	printf("line number: %d\n", getLine(&chunk, (uint8_t)2));
 	printf("line_count: %d, %d\n", chunk.count, chunk.repeatedLines.lines[0]);
 	for (int i = 0; i < chunk.repeatedLines.size_of_lines; i++)
 	{

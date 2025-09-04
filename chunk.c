@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 void initChunk(Chunk* chunk) {
-	
 	chunk->count = 0;
 	chunk->capacity = 0;
 	chunk->code = NULL;
@@ -47,7 +46,7 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line) {
 	chunk->code[chunk->count] = byte;
 	if (chunk->count > 0 && line == chunk->repeatedLines.lines[chunk->repeatedLines.size_of_lines-1])
 	{
-		chunk->repeatedLines.run_count[chunk->repeatedLines.size] += 1;
+		chunk->repeatedLines.run_count[chunk->repeatedLines.size - 1] += 1;
 	}
 	else {
 		chunk->repeatedLines.size++;
@@ -67,4 +66,20 @@ void freeChunk(Chunk* chunk) {
 int addConstant(Chunk* chunk, Value value) {
 	writeValueArray(&chunk->constants, value);
 	return chunk->constants.count - 1;
+}
+
+int getLine(Chunk* chunk, int instructionOffset)
+{
+	int result = 0;
+	int sum = 0;
+	for (int i = 0; i < chunk->repeatedLines.size; i++)
+	{
+		sum += chunk->repeatedLines.run_count[i];
+		if (instructionOffset < sum)
+		{
+			result = chunk->repeatedLines.lines[i];
+			break;
+		}
+	}
+	return result;
 }
