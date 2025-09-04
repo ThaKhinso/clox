@@ -1,12 +1,39 @@
 #include "common.h"
 #include <stdio.h>
 #include "chunk.h"
+#include "debug.h"
 
 int main(int argc, char* argv[]) {
 
 	Chunk chunk;
 	initChunk(&chunk);
-	writeChunk(&chunk, OP_RETURN);
+
+	int constant = addConstant(&chunk, 2.1);
+	//int sec = addConstant(&chunk, 3.3);
+	writeChunk(&chunk, OP_CONSTANT, 123);
+	writeChunk(&chunk, constant, 123);
+	//writeChunk(&chunk, sec);
+	writeChunk(&chunk, OP_RETURN, 124);
+
+	writeChunk(&chunk, OP_RETURN, 125);
+	writeChunk(&chunk, OP_RETURN, 125);
+	writeChunk(&chunk, OP_RETURN, 125);
+	printf("line_count: %d, %d\n", chunk.count, chunk.repeatedLines.lines[0]);
+	for (int i = 0; i < chunk.repeatedLines.size_of_lines; i++)
+	{
+		printf("different_line number = %i\n", chunk.repeatedLines.lines[i]);
+		/*for (int j = 0; j < chunk.repeatedLines.size; j++)
+		{
+			printf(" Times = %d\n", chunk.repeatedLines.run_count[j]);
+		}*/
+	}
+	for (int i = 0; i < chunk.repeatedLines.size; i++)
+	{
+		printf("repeatedcount = %i\n", chunk.repeatedLines.run_count[i]);
+	}
+	//printf("first chunk: %d, second chunk: %d\n", chunk.code[0], chunk.code[1]);
+	//printf("repeated line: %d\n", chunk.repeatedLines.run_count[0]);
+	disassembleChunk(&chunk, "test chunk");
 	freeChunk(&chunk);
 	int out = getc(stdin);
 	return 0;

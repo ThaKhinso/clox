@@ -128,16 +128,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="chunk.c" />
+    <ClCompile Include="debug.c" />
     <ClCompile Include="main.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</CompileAs>
     </ClCompile>
     <ClCompile Include="memory.c" />
+    <ClCompile Include="value.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chunk.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="memory.h" />
+    <ClInclude Include="value.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

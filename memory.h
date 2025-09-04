@@ -10,4 +10,9 @@
 #define FREE_ARRAY(type, pointer, oldCount) \
 		reallocate(pointer, sizeof(type) * (oldCount), 0)
 
+#define INIT_ARRAY(type, pointer, count, init_number) \
+		for(int i = 0; i < count; i++) { \
+			pointer[i] = (type)init_number;		 \
+		}
+
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
