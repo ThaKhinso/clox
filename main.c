@@ -2,11 +2,14 @@
 #include <stdio.h>
 #include "chunk.h"
 #include "debug.h"
+#include "vm.h"
 
 int main(int argc, char* argv[]) {
 
+	initVM();
 	Chunk chunk;
 	initChunk(&chunk);
+
 
 	int constant = addConstant(&chunk, 2.1);
 	//int sec = addConstant(&chunk, 3.3);
@@ -42,6 +45,8 @@ int main(int argc, char* argv[]) {
 	//printf("first chunk: %d, second chunk: %d\n", chunk.code[0], chunk.code[1]);
 	//printf("repeated line: %d\n", chunk.repeatedLines.run_count[0]);
 	disassembleChunk(&chunk, "test chunk");
+	interpret(&chunk);
+	freeVM();
 	freeChunk(&chunk);
 	int out = getc(stdin);
 	return 0;
