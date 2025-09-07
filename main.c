@@ -15,19 +15,22 @@ int main(int argc, char* argv[]) {
 	//int sec = addConstant(&chunk, 3.3);
 	writeChunk(&chunk, OP_CONSTANT, 123);
 	writeChunk(&chunk, constant, 123);
-	//writeChunk(&chunk, sec);
-	writeChunk(&chunk, OP_RETURN, 124);
 
-	writeChunk(&chunk, OP_RETURN, 125);
-	writeChunk(&chunk, OP_RETURN, 125);
-	writeChunk(&chunk, OP_RETURN, 125);
+	constant = addConstant(&chunk, 3.4);
+	writeChunk(&chunk, OP_CONSTANT, 123);
+	writeChunk(&chunk, constant, 123);
+	writeChunk(&chunk, OP_ADD, 123);
 
-	writeChunk(&chunk, OP_RETURN, 126);
-	writeChunk(&chunk, OP_RETURN, 126);
-	writeChunk(&chunk, OP_RETURN, 126);
-	writeChunk(&chunk, OP_RETURN, 126);
-	writeChunk(&chunk, OP_RETURN, 126);
-	writeChunk(&chunk, OP_RETURN, 126);
+	constant = addConstant(&chunk, 5.6);
+	writeChunk(&chunk, OP_CONSTANT, 123);
+	writeChunk(&chunk, constant, 123);
+	writeChunk(&chunk, OP_DIVIDE, 123);
+
+	writeChunk(&chunk, OP_NEGATE, 123);
+	writeChunk(&chunk, OP_RETURN, 123);
+
+
+	
 	printf("line number: %d\n", getLine(&chunk, (uint8_t)2));
 	printf("line_count: %d, %d\n", chunk.count, chunk.repeatedLines.lines[0]);
 	for (int i = 0; i < chunk.repeatedLines.size_of_lines; i++)
@@ -44,7 +47,7 @@ int main(int argc, char* argv[]) {
 	}
 	//printf("first chunk: %d, second chunk: %d\n", chunk.code[0], chunk.code[1]);
 	//printf("repeated line: %d\n", chunk.repeatedLines.run_count[0]);
-	disassembleChunk(&chunk, "test chunk");
+	//disassembleChunk(&chunk, "test chunk");
 	interpret(&chunk);
 	freeVM();
 	freeChunk(&chunk);

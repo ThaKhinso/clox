@@ -1,13 +1,15 @@
 #pragma once
-
+#define STACK_MAX 256
 #include "common.h"
 #include "chunk.h"
 
 typedef struct {
 	Chunk* chunk;
 	uint8_t* ip;
+	Value stack[STACK_MAX];
+	Value* stackTop;
 }VM;
-
+	
 typedef enum {
 	INTERPRET_OK,
 	INTERPRET_COMPILE_ERROR,
@@ -17,3 +19,6 @@ typedef enum {
 void initVM();
 void freeVM();
 InterpretResult interpret(Chunk* chunk);
+
+void push(Value value);
+Value pop();
