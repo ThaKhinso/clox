@@ -1,5 +1,6 @@
 #include "vm.h"
 #include "debug.h"
+#include "compiler.h"
 VM vm;
 
 static void resetStack() {
@@ -15,6 +16,10 @@ void freeVM() {
 
 }
 
+InterpretResult interpret(const char* source) {
+	compile(source);
+	return INTERPRET_OK;
+}
 
 
 InterpretResult interpret(Chunk* chunk)
