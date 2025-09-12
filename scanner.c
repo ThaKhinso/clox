@@ -87,8 +87,59 @@ static void skipWhitespace() {
 	}
 }
 
+static bool isDigit(char c) {
+	return c >= '0' && c <= '9';
+}
+
+static bool isAlpha(char c) {
+	return (c >= 'a' && c <= 'z') ||
+		(c >= 'A' && c <= 'Z') ||
+		c == '_';
+}
+
+static Token number() {
+	while (isDigit(peek())) advance();
+	// Look for a fractional part.
+	if (peek() == '.' && isDigit(peekNext())) {
+		// Consume the "."
+		advance();
+		while (isDigit(peek())) advance();
+	}
+	return makeToken(TOKEN_NUMBER);
+}
+
+static TokenType checkKeyword(int start, int length, const char* rest, TokenType type) {
+	if (scanner.current - scanner.start == start + length &&
+		memcmp(scanner.start + start, rest, length) == 0) {
+		return type;
+	}
+	return TOKEN_IDENTIFIER;
+}
+
+static TokenType identifierType() {
+	switch (scanner.start[0]) {
+	case 'a': return checkKeyword(1, 2, "nd", TOKEN_AND);
+	case 'c': return checkKeyword(1, 4, "lass", TOKEN_CLASS);
+	case 'e': return checkKeyword(1, 3, "lse", TOKEN_ELSE);
+	case 'i': return checkKeyword(1, 1, "f", TOKEN_IF);
+	case 'n': return checkKeyword(1, 2, "il", TOKEN_NIL);
+	case 'o': return checkKeyword(1, 1, "r", TOKEN_OR);
+	case 'p': return checkKeyword(1, 4, "rint", TOKEN_PRINT);
+	case 'r': return checkKeyword(1, 5, "eturn", TOKEN_RETURN);
+	case 's': return checkKeyword(1, 4, "uper", TOKEN_SUPER);
+	case 'v': return checkKeyword(1, 2, "ar", TOKEN_VAR);
+	case 'w': return checkKeyword(1, 4, "hile", TOKEN_WHILE);
+	}
+	return TOKEN_IDENTIFIER;
+}
+
+static Token identifier() {
+	while (isAlpha(peek()) || isDigit(peek())) advance();
+	return makeToken(identifierType());
+}
+
 Token scanToken() {
-	skipWhiteSpaces();
+	skipWhitespace();
 	scanner.start = scanner.current;
 	if (isAtEnd())
 	{
@@ -96,7 +147,9 @@ Token scanToken() {
 	}
 
 	char c = advance();
-
+	if (isDigit(c)) return number();
+	if (isAlpha(c)) return identifier();
+	
 	switch (c)
 	{
 	case '(': return makeToken(TOKEN_LEFT_PAREN);
@@ -126,9 +179,27 @@ Token scanToken() {
 		return makeToken(
 			match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER
 		);
+	case '"':
+		return string();
 	default:
 		break;
 	}
 
 	return errorToken("Unexpected character.");
 }
+
+static Token string() {
+	while (peek() != '"' && !isAtEnd()) {
+		if (peek() == '\n') scanner.line++;
+		advance();
+	}
+
+	if (isAtEnd())
+	{
+		return errorToken("Unterminated String.");
+	}
+
+	advance();
+	return makeToken(TOKEN_STRING);
+}
+
